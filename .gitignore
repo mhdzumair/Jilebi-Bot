@@ -1,0 +1,5 @@
+# ignore the HTTP cache & environmental files
+.cache/
+venv/
+.idea/
+*.pyc
