@@ -1,4 +1,4 @@
-<h1 align="center">Jilebi Bot
+<h1 align="center">Jilebi Bot</h1>
 <p align="center">An Interactive Telegram bot for managing the Events of Moodle (LMS) Students.
 
 <img align="center" src="images/photo_2020-12-08_13-26-48.jpg">
