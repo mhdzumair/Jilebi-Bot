@@ -26,7 +26,7 @@ def main():
     send_notification()
     scheduler.start()
     try:
-        server.run(host="0.0.0.0", port=5000, debug=True)
+        server.run(host="0.0.0.0", port=environ.get('PORT', 5000), debug=True)
     except KeyboardInterrupt:
         print("Shutdown the bot...")
 
