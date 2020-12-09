@@ -5,17 +5,21 @@
 
 ![Travis (.com)](https://img.shields.io/travis/com/mhdzumair/Jilebi-Bot)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4eb89a0e5a2741d58245092ef01f72f5)](https://app.codacy.com/gh/mhdzumair/Jilebi-Bot?utm_source=github.com&utm_medium=referral&utm_content=mhdzumair/Jilebi-Bot&utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/dd81424073da4caab4d42e1010412989)](https://www.codacy.com/gh/mhdzumair/Jilebi-Bot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mhdzumair/Jilebi-Bot&amp;utm_campaign=Badge_Coverage)
 [![codecov](https://codecov.io/gh/mhdzumair/Jilebi-Bot/branch/main/graph/badge.svg?token=P8BDN38VQ6)](https://codecov.io/gh/mhdzumair/Jilebi-Bot)
 
 <h4 align="center">An Interactive Telegram bot for managing the Events of Moodle (LMS) Students.</h4>
 
 ### Features
 
-* View the schedule as a beautiful Image based or text-based results
-* View other university students modules, events (if they volunteer to give details)
-* Get Reminder for events within 30 minutes of time period.<p color="red"> Note: The event should be created at least
-  before half an hour by your module lecturer, in order to get Reminder</p>
-* Send Queries / Feedbacks to Me
+*  View the schedule as a beautiful Image based or text-based results
+   
+*  View other university students modules, events (if they volunteer to give details)
+   
+*  Get Reminder for events within 30 minutes of time period.<p color="red"> Note: The event should be created at least
+   
+   before half an hour by your module lecturer, in order to get Reminder</p>
+*  Send Queries / Feedbacks to Me
 
 ### Requirement for Jilebi bot
 
@@ -41,11 +45,17 @@ download it from [mhdzumair/icalevents](https://github.com/mhdzumair/icalevents.
 
 ### Useful Link
 
-* [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI)
-* [mongoengine](http://docs.mongoengine.org/tutorial.html)
-* [DuttyBot](https://github.com/dmytrostriletskyi/DuttyBot.git)
-* [Rutetider](https://github.com/dmytrostriletskyi/Rutetider)
-* [python-telegram-bot-heroku](https://github.com/liuhh02/python-telegram-bot-heroku)
-* Fonts are got from [Google Fonts](https://fonts.google.com/)
-* images from [unsplash](https://unsplash.com/s/photos/paper-and-laptop)
-  & [pexels](https://www.pexels.com/search/paper%20and%20pen/) 
+*  [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI)
+   
+*  [mongoengine](http://docs.mongoengine.org/tutorial.html)
+   
+*  [DuttyBot](https://github.com/dmytrostriletskyi/DuttyBot.git)
+   
+*  [Rutetider](https://github.com/dmytrostriletskyi/Rutetider)
+   
+*  [python-telegram-bot-heroku](https://github.com/liuhh02/python-telegram-bot-heroku)
+   
+*  Fonts are got from [Google Fonts](https://fonts.google.com/)
+   
+*  images from [unsplash](https://unsplash.com/s/photos/paper-and-laptop)
+   & [pexels](https://www.pexels.com/search/paper%20and%20pen/) 
