@@ -2,7 +2,7 @@ from os import environ
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from telebot.types import Update
 
 from jilebi import jilebi, send_notification, TeleUsers
@@ -25,7 +25,7 @@ def web_hook():
 
 @server.route("/get_user_count", methods=["GET"])
 def get_user_count():
-    return str(TeleUsers.objects.count())
+    return jsonify(count=TeleUsers.objects.count())
 
 
 def main():
