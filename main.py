@@ -1,8 +1,9 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from flask import Flask, request
-from jilebi import jilebi, send_notification, environ
 from telebot.types import Update
+
+from jilebi import jilebi, send_notification, environ
 
 server = Flask(__name__)
 

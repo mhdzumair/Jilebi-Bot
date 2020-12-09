@@ -1,7 +1,8 @@
 from telebot import TeleBot, apihelper
 from telebot.util import split_string
-from .model import *
+
 from .keyboard_keys import Keyboard, ReplyKeyboardRemove
+from .model import *
 
 
 class ExceptionHandler(Exception):
@@ -42,6 +43,17 @@ def send_notification():
                     TeleUsers.objects(pk=subscriber).delete()
 
 
+def handle_all_results(result, chat_id):
+    if isinstance(result, list):
+        if TeleUsers.objects.only("is_image_result").get(pk=chat_id).is_image_result:
+            send_image(result, chat_id)
+        else:
+            send_message(result, chat_id)
+    else:
+        jilebi.reply_to(chat_id,
+                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+
+
 @jilebi.message_handler(commands=["start", "reset", "restart"])
 def send_welcome(message):
     create_user(message)
@@ -79,14 +91,7 @@ def send_today_event(message):
         return
 
     result = find_today_events(message.chat.id, True)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(result, message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Tomorrow events")
@@ -95,15 +100,7 @@ def send_tomorrow_event(message):
         jilebi.send_message(message.chat.id, "Sorry you need to setup calendar link first")
         return
 
-    result = find_tomorrow_events(message.chat.id, True)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(find_tomorrow_events(message.chat.id, True), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this week events")
@@ -112,15 +109,7 @@ def send_week_event(message):
         jilebi.send_message(message.chat.id, "Sorry you need to setup calendar link first")
         return
 
-    result = find_week_events(message.chat.id, True)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(find_week_events(message.chat.id, True), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this month events")
@@ -129,15 +118,7 @@ def send_month_event(message):
         jilebi.send_message(message.chat.id, "Sorry you need to setup calendar link first")
         return
 
-    result = find_month_events(message.chat.id, True)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(find_month_events(message.chat.id, True), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Settings")
@@ -241,54 +222,22 @@ def send_modules(message):
 
 @jilebi.message_handler(func=lambda message: message.text == "Today Events")
 def send_today_event(message):
-    result = find_today_events(message.chat.id, False)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(find_today_events(message.chat.id, False), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Tomorrow events")
 def send_tomorrow_event(message):
-    result = find_tomorrow_events(message.chat.id, False)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(find_tomorrow_events(message.chat.id, False), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "This week events")
 def send_week_event(message):
-    result = find_week_events(message.chat.id, False)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(find_week_events(message.chat.id, False), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "This month events")
 def send_month_event(message):
-    result = find_month_events(message.chat.id, False)
-    if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
-            send_image(result, message.chat.id)
-        else:
-            send_message(result, message.chat.id)
-    else:
-        jilebi.reply_to(message.chat.id,
-                        "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...")
+    handle_all_results(find_month_events(message.chat.id, False), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Modules list")
@@ -356,4 +305,3 @@ def handle_all(message):
         TeleUsers.objects(pk=message.chat.id).update(feedback=False)
     else:
         jilebi.reply_to(message, "Sorry wrong input!")
-

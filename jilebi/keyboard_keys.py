@@ -1,4 +1,5 @@
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+
 from .db_structer import TeleUsers, University
 
 
@@ -84,7 +85,7 @@ class Keyboard:
         select = TeleUsers.objects.only("selection").get(pk=message.chat.id).selection
         if select.division:
             semester = University.objects.only("faculty__name", "faculty__division__name",
-                                                     "faculty__division__semester").get(
+                                               "faculty__division__semester").get(
                 name=select.university, faculty__name=select.faculty, faculty__division__name=select.division,
                 faculty__division__semester__name=select.semester).faculty.get(name=select.faculty).division.get(
                 name=select.division).semester.get(name=select.semester)

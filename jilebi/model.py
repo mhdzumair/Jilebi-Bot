@@ -1,13 +1,14 @@
-from arrow import now, get
-from .db_structer import *
-from httplib2 import HttpLib2Error
-from icalevents.icalevents import events
-from mongoengine import connect, DoesNotExist
 from os import environ
-from PIL import Image, ImageDraw, ImageFont, ImageOps
 from random import choice
 from textwrap import fill, shorten
 
+from PIL import Image, ImageDraw, ImageFont, ImageOps
+from arrow import now, get
+from httplib2 import HttpLib2Error
+from icalevents.icalevents import events
+from mongoengine import connect, DoesNotExist
+
+from .db_structer import *
 
 connect("jilebi", host=environ.get("MONGO_HOST"),
         username=environ.get("MONGO_USER"), password=environ.get("MONGO_PASS"),
