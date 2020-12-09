@@ -25,7 +25,7 @@ def web_hook():
 
 @server.route("/get_user_count", methods=["GET"])
 def get_user_count():
-    return TeleUsers.objects.count(), 200
+    return str(TeleUsers.objects.count())
 
 
 def main():
@@ -34,7 +34,7 @@ def main():
     send_notification()
     scheduler.start()
     try:
-        server.run(host="0.0.0.0", port=environ.get('PORT', 5000), debug=True)
+        server.run(host="0.0.0.0", port=environ.get('PORT', 5000))
     except KeyboardInterrupt:
         print("Shutdown the bot...")
 
