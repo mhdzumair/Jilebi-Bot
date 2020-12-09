@@ -4,6 +4,7 @@
 <h1 align="center">Jilebi Bot</h1>
 
 ![Travis (.com)](https://img.shields.io/travis/com/mhdzumair/Jilebi-Bot)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4eb89a0e5a2741d58245092ef01f72f5)](https://app.codacy.com/gh/mhdzumair/Jilebi-Bot?utm_source=github.com&utm_medium=referral&utm_content=mhdzumair/Jilebi-Bot&utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/mhdzumair/Jilebi-Bot/branch/main/graph/badge.svg?token=P8BDN38VQ6)](https://codecov.io/gh/mhdzumair/Jilebi-Bot)
 
 <h4 align="center">An Interactive Telegram bot for managing the Events of Moodle (LMS) Students.</h4>
