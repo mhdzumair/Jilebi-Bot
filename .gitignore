@@ -3,3 +3,7 @@
 venv/
 .idea/
 *.pyc
+
+# ignore coverage files
+.coverage
+coverage.xml
