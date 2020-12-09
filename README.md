@@ -1,7 +1,12 @@
+<p align="center">
+    <img src="images/photo_2020-12-08_13-26-48.jpg" width=450 height=450 align=center>
+</p>
 <h1 align="center">Jilebi Bot</h1>
-<p align="center">An Interactive Telegram bot for managing the Events of Moodle (LMS) Students.
 
-<img align="center" src="images/photo_2020-12-08_13-26-48.jpg">
+![Travis (.com)](https://img.shields.io/travis/com/mhdzumair/Jilebi-Bot)
+[![codecov](https://codecov.io/gh/mhdzumair/Jilebi-Bot/branch/main/graph/badge.svg?token=P8BDN38VQ6)](https://codecov.io/gh/mhdzumair/Jilebi-Bot)
+
+<h4 align="center">An Interactive Telegram bot for managing the Events of Moodle (LMS) Students.</h4>
 
 ### Features
 * View the schedule as a beautiful Image based or text-based results
