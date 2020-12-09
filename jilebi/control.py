@@ -91,7 +91,7 @@ def send_tutorial(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Today Events")
-def send_today_event(message):
+def send_user_today_event(message):
     if not is_calendar_present(message):
         jilebi.send_message(message.chat.id, "Sorry you need to setup calendar link first")
         return
@@ -101,7 +101,7 @@ def send_today_event(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Tomorrow events")
-def send_tomorrow_event(message):
+def send_user_tomorrow_event(message):
     if not is_calendar_present(message):
         jilebi.send_message(message.chat.id, "Sorry you need to setup calendar link first")
         return
@@ -110,7 +110,7 @@ def send_tomorrow_event(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this week events")
-def send_week_event(message):
+def send_user_week_event(message):
     if not is_calendar_present(message):
         jilebi.send_message(message.chat.id, "Sorry you need to setup calendar link first")
         return
@@ -119,7 +119,7 @@ def send_week_event(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this month events")
-def send_month_event(message):
+def send_user_month_event(message):
     if not is_calendar_present(message):
         jilebi.send_message(message.chat.id, "Sorry you need to setup calendar link first")
         return
@@ -128,7 +128,7 @@ def send_month_event(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Settings")
-def set_subscribe(message):
+def send_setting(message):
     keyboard.send_settings(message)
 
 
@@ -169,7 +169,7 @@ def set_subscribe(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Unsubscribe Notification")
-def set_subscribe(message):
+def set_unsubscribe(message):
     TeleUsers.objects(pk=message.chat.id).update(is_subscriber=False)
     jilebi.reply_to(message, "successfully unsubscribe the notification")
     keyboard.send_settings(message)
@@ -247,31 +247,31 @@ def send_month_event(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Modules list")
-def get_menu(message):
+def send_module_list(message):
     jilebi.send_message(message.chat.id, get_modules(message.chat.id))
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Text based result")
-def get_menu(message):
+def set_text_based(message):
     TeleUsers.objects(pk=message.chat.id).update(is_image_result=False)
     jilebi.reply_to(message, "Successfully setup for Text based result.")
     keyboard.send_settings(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Image based result")
-def get_menu(message):
+def set_image_based(message):
     TeleUsers.objects(pk=message.chat.id).update(is_image_result=True)
     jilebi.reply_to(message, "Successfully setup for Image based result.")
     keyboard.send_settings(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Main Menu")
-def get_menu(message):
+def send_to_main(message):
     keyboard.send_home(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Back")
-def get_menu(message):
+def send_back(message):
     position = TeleUsers.objects.only("position").get(pk=message.chat.id).position
     if position == 1:
         keyboard.send_home(message)
