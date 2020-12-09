@@ -8,7 +8,7 @@ from httplib2 import HttpLib2Error, Http
 from icalevents.icalevents import events
 from mongoengine import connect, DoesNotExist
 
-from .db_structer import *
+from .db_structer import University, TeleUsers, DoubleEvent, SingleEvent
 
 connect("jilebi", host=environ.get("MONGO_HOST"),
         username=environ.get("MONGO_USER"), password=environ.get("MONGO_PASS"),
