@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 
-from jilebi import *
+from jilebi import TeleUsers, jilebi, get_events, get_module_name
 
 
 class Test(TestCase):

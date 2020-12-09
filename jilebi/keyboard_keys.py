@@ -5,6 +5,10 @@ from .db_structer import TeleUsers, University
 
 class Keyboard:
     def __init__(self, bot):
+        """
+        Handle all telegram keyboard keys
+        :param bot: telebot bot API
+        """
         self.jilebi = bot
         self.back_btn = KeyboardButton("Back")
         self.main_menu = KeyboardButton("Main Menu")

@@ -1,8 +1,14 @@
+from os import environ
+
+from arrow import now
 from telebot import TeleBot, apihelper
 from telebot.util import split_string
 
+from .db_structer import TeleUsers, Calendar, University
 from .keyboard_keys import Keyboard, ReplyKeyboardRemove
-from .model import *
+from .model import (create_double_event, create_single_event, format_events, find_half_hour_events, create_user,
+                    is_calendar_present, find_today_events, find_tomorrow_events, find_week_events, find_month_events,
+                    get_modules)
 
 
 class ExceptionHandler(Exception):
