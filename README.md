@@ -3,10 +3,11 @@
 </p>
 <h1 align="center">Jilebi Bot</h1>
 
-![Travis (.com)](https://img.shields.io/travis/com/mhdzumair/Jilebi-Bot)
+![Travis (.com)](https://img.shields.io/travis/com/mhdzumair/Jilebi-Bot?style=plastic&logo=travis)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4eb89a0e5a2741d58245092ef01f72f5)](https://app.codacy.com/gh/mhdzumair/Jilebi-Bot?utm_source=github.com&utm_medium=referral&utm_content=mhdzumair/Jilebi-Bot&utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/dd81424073da4caab4d42e1010412989)](https://www.codacy.com/gh/mhdzumair/Jilebi-Bot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mhdzumair/Jilebi-Bot&amp;utm_campaign=Badge_Coverage)
 [![codecov](https://codecov.io/gh/mhdzumair/Jilebi-Bot/branch/main/graph/badge.svg?token=P8BDN38VQ6)](https://codecov.io/gh/mhdzumair/Jilebi-Bot)
+[![Active Users](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Current%20Active%20Users&query=count&url=https%3A%2F%2Fjilebibot.herokuapp.com%2Fget_user_count?style=plastic&logo=telegram)](https://t.me/JilebiBot)
 
 <h4 align="center">An Interactive Telegram bot for managing the Events of Moodle (LMS) Students.</h4>
 
