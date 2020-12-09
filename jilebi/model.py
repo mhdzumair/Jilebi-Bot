@@ -4,7 +4,7 @@ from textwrap import fill, shorten
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from arrow import now, get
-from httplib2 import HttpLib2Error
+from httplib2 import HttpLib2Error, Http
 from icalevents.icalevents import events
 from mongoengine import connect, DoesNotExist
 
@@ -71,11 +71,15 @@ def get_events(chat_id, period, is_user, start=None, end=None):
           f"{calendar.token}&preset_what=all&preset_time={period}"
     response = None
     try:
-        # http = Http('.cache', proxy_info=ProxyInfo(socks.SOCKS5, "127.0.0.1", 8080))
-        http = None
+        http = Http('.cache')
+    except PermissionError:
+        http = Http()
+    try:
         response = events(url, http=http, start=start, end=end)
     except (HttpLib2Error, ValueError) as e:
         print("get event error: ", e)
+    finally:
+        http.close()
     return response
 
 
