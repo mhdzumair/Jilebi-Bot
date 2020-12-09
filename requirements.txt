@@ -7,3 +7,4 @@ Flask==1.1.2
 Pillow>=8.0.1
 pyTelegramBotAPI>=3.7.4
 pymongo[srv]
+coverage
