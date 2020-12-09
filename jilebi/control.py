@@ -6,7 +6,7 @@ from telebot.util import split_string
 
 from .db_structer import TeleUsers, Calendar, University
 from .keyboard_keys import Keyboard, ReplyKeyboardRemove
-from .model import (create_double_event, create_single_event, format_events, find_half_hour_events, create_user,
+from .model import (create_image, format_events, find_half_hour_events, create_user,
                     is_calendar_present, find_today_events, find_tomorrow_events, find_week_events, find_month_events,
                     get_modules)
 
@@ -24,9 +24,9 @@ keyboard = Keyboard(jilebi)
 def send_image(result, chat_id):
     if result:
         for count in range(0, len(result) - 1, 2):
-            jilebi.send_photo(chat_id, create_double_event(result[count:count + 2]))
+            jilebi.send_photo(chat_id, create_image(result[count:count + 2]))
         if len(result) % 2 == 1:
-            jilebi.send_photo(chat_id, create_single_event(result[-1]))
+            jilebi.send_photo(chat_id, create_image(result[-1]))
     else:
         jilebi.send_message(chat_id, "Congratulation! You dont have any work to do. \nEnjoy your self. Cheers!")
 

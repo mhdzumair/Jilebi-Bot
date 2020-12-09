@@ -27,6 +27,22 @@ def get_module_name(module_code):
         return module_code
 
 
+def get_semester(chat_id):
+    select = TeleUsers.objects.only("selection").get(pk=chat_id).selection
+    if select.division:
+        semester = University.objects.only("faculty__name", "faculty__division__name",
+                                           "faculty__division__semester").get(
+            name=select.university, faculty__name=select.faculty, faculty__division__name=select.division,
+            faculty__division__semester__name=select.semester).faculty.get(name=select.faculty).division.get(
+            name=select.division).semester.get(name=select.semester)
+    else:
+        semester = University.objects.only("faculty__name", "faculty__semester").get(
+            name=select.university, faculty__name=select.faculty,
+            faculty__semester__name=select.semester).faculty.get(name=select.faculty).semester.get(
+            name=select.semester)
+    return semester
+
+
 def format_events(response):
     result = ""
     if response:
@@ -54,18 +70,7 @@ def get_events(chat_id, period, is_user, start=None, end=None):
     if is_user:
         calendar = TeleUsers.objects.only("calendar").get(pk=chat_id).calendar
     else:
-        select = TeleUsers.objects.only("selection").get(pk=chat_id).selection
-        if select.division:
-            calendar = University.objects.only("faculty__name", "faculty__division__name",
-                                               "faculty__division__semester").get(
-                name=select.university, faculty__name=select.faculty, faculty__division__name=select.division,
-                faculty__division__semester__name=select.semester).faculty.get(name=select.faculty).division.get(
-                name=select.division).semester.get(name=select.semester).donor_calendar
-        else:
-            calendar = University.objects.only("faculty__name", "faculty__semester").get(
-                name=select.university, faculty__name=select.faculty,
-                faculty__semester__name=select.semester).faculty.get(name=select.faculty).semester.get(
-                name=select.semester).donor_calendar
+        calendar = get_semester(chat_id).calendar
 
     url = f"https://{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken=" \
           f"{calendar.token}&preset_what=all&preset_time={period}"
@@ -100,26 +105,6 @@ def create_user(message):
             TeleUsers(chat_id=message.chat.id, username=message.chat.username).save()
         else:
             TeleUsers(chat_id=message.chat.id, username=f"{message.chat.first_name} {message.chat.last_name}").save()
-
-
-def create_double_event(double_events):
-    double = DoubleEvent.objects.get(pk=choice(DoubleEvent.objects.distinct("pk")))
-    image = Image.open(double.name)
-    font1 = ImageFont.truetype(double.font1.name, double.font1.size)
-    font2 = ImageFont.truetype(double.font2.name, double.font2.size)
-    fonts = (font1, font2)
-    place_text(image, double.image1.place, double_events[0], double.image1.size, fonts, double.image1.angle)
-    place_text(image, double.image2.place, double_events[1], double.image2.size, fonts, double.image2.angle)
-    return image
-
-
-def create_single_event(event):
-    single = SingleEvent.objects.get(pk=choice(SingleEvent.objects.distinct("pk")))
-    image = Image.open(single.name)
-    font1 = ImageFont.truetype(single.font1.name, single.font1.size)
-    font2 = ImageFont.truetype(single.font2.name, single.font2.size)
-    place_text(image, single.image.place, event, single.image.size, (font1, font2), single.image.angle)
-    return image
 
 
 def place_text(image, place, event, size, fonts, rotate):
@@ -162,6 +147,24 @@ def place_text(image, place, event, size, fonts, rotate):
     text_image = text_image.rotate(rotate, expand=True)
     image.paste(ImageOps.colorize(text_image, (0, 0, 0), (0, 0, 0)), place, text_image)
     text_image.close()
+
+
+def create_image(event):
+    if isinstance(event, list):
+        photo = DoubleEvent.objects.get(pk=choice(DoubleEvent.objects.distinct("pk")))
+    else:
+        photo = SingleEvent.objects.get(pk=choice(SingleEvent.objects.distinct("pk")))
+
+    image = Image.open(photo.name)
+    font1 = ImageFont.truetype(photo.font1.name, photo.font1.size)
+    font2 = ImageFont.truetype(photo.font2.name, photo.font2.size)
+    fonts = (font1, font2)
+    if isinstance(event, list):
+        place_text(image, photo.image1.place, event[0], photo.image1.size, fonts, photo.image1.angle)
+        place_text(image, photo.image2.place, event[1], photo.image2.size, fonts, photo.image2.angle)
+    else:
+        place_text(image, photo.image.place, event, photo.image.size, (font1, font2), photo.image.angle)
+    return image
 
 
 def format_notification(event):
@@ -227,18 +230,7 @@ def find_month_events(chat_id, is_user):
 
 
 def get_modules(chat_id):
-    select = TeleUsers.objects.only("selection").get(pk=chat_id).selection
-    if select.division:
-        modules = University.objects.only("faculty__name", "faculty__division__name",
-                                          "faculty__division__semester").get(
-            name=select.university, faculty__name=select.faculty, faculty__division__name=select.division,
-            faculty__division__semester__name=select.semester).faculty.get(name=select.faculty).division.get(
-            name=select.division).semester.get(name=select.semester).modules
-    else:
-        modules = University.objects.only("faculty__name", "faculty__semester").get(
-            name=select.university, faculty__name=select.faculty,
-            faculty__semester__name=select.semester).faculty.get(name=select.faculty).semester.get(
-            name=select.semester).modules
+    modules = get_semester(chat_id).modules
 
     result = "List of Modules\r\n"
     for module in modules.values():
