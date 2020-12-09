@@ -1,9 +1,11 @@
+from os import environ
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from flask import Flask, request
 from telebot.types import Update
 
-from jilebi import jilebi, send_notification, environ
+from jilebi import jilebi, send_notification, TeleUsers
 
 server = Flask(__name__)
 
@@ -19,6 +21,11 @@ def web_hook():
     jilebi.remove_webhook()
     jilebi.set_webhook(url='https://jilebibot.herokuapp.com/' + environ.get("JILEBI_TOKEN"))
     return "CONNECTED", 200
+
+
+@server.route("/get_user_count", methods=["GET"])
+def get_user_count():
+    return TeleUsers.objects.count(), 200
 
 
 def main():
