@@ -1,4 +1,8 @@
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from telebot.types import (ReplyKeyboardMarkup,
+                           KeyboardButton,
+                           ReplyKeyboardRemove,
+                           InlineKeyboardButton,
+                           InlineKeyboardMarkup)
 
 from .db_structer import TeleUsers, University
 from .model import get_semester
@@ -19,7 +23,7 @@ class Keyboard:
         reply_markup.row("Get Today Events", "Get Tomorrow events")
         reply_markup.row("Get this week events", "Get this month events")
         reply_markup.row("See Other University Students Events")
-        reply_markup.row("Send Queries/Feedbacks", "Settings")
+        reply_markup.row("Extra", "Settings")
         self.jilebi.send_message(message.chat.id, "Select Menu Item", reply_markup=reply_markup)
         TeleUsers.objects(pk=message.chat.id).update(unset__selection=1, position=0)
 
@@ -101,3 +105,18 @@ class Keyboard:
         reply_markup.row(self.back_btn, self.main_menu)
         self.jilebi.send_message(message.chat.id, "Select Item: ", reply_markup=reply_markup)
         TeleUsers.objects(pk=message.chat.id).update(position=5)
+
+    def send_extras(self, message):
+        reply_markup = ReplyKeyboardMarkup()
+        reply_markup.row("Submit your module details")
+        reply_markup.row("Send Queries/Feedbacks", "Source Code")
+        reply_markup.row("Share Jilebi", self.main_menu)
+        self.jilebi.send_message(message.chat.id, "Select Item: ", reply_markup=reply_markup)
+
+    def ask_division(self, message):
+        inline_markup = InlineKeyboardMarkup(row_width=2)
+        inline_markup.add(InlineKeyboardButton("Yes", callback_data="yes"),
+                          InlineKeyboardButton("No", callback_data="no"),
+                          InlineKeyboardButton("test", "https://www.google.com"))
+        self.jilebi.send_message(message.chat.id, "Are you have Divisions / Department inside your faculty?",
+                                 reply_markup=inline_markup)
