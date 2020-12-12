@@ -322,9 +322,11 @@ def submit_module_details(message):
 @jilebi.callback_query_handler(func=lambda call: call.data == "yes" or "no")
 def get_answer(call):
     if call.data == "yes":
+        jilebi.send_message(call.id, "What is your division / department name: \nExample: IT")
         TeleUsers.objects(pk=call.id).update(submit_position=2)
     elif call.data == "no":
-        TeleUsers.objects(pk=call.id).update(submit_position=4)
+        jilebi.send_message(call.id, "What is your Semester name:\nExample Semester 4")
+        TeleUsers.objects(pk=call.id).update(submit_position=3)
 
 
 @jilebi.message_handler(content_types=["sticker"])
@@ -359,15 +361,9 @@ def handle_submission(message):
         keyboard.ask_division(message)
         user.update(user_submit__faculty=message.text)
     elif user.submit_position == 2:
-        jilebi.send_message(message.chat.id, "What is your division / department name: \nExample: IT")
-        user.update(submit_position=3)
+        jilebi.send_message(message.chat.id, "What is your Semester name:\nExample Semester 4")
+        user.update(user_submit__division=message.text, submit_position=3)
     elif user.submit_position == 3:
-        jilebi.send_message(message.chat.id, "What is your Semester name:\nExample Semester 4")
-        user.update(user_submit__division=message.text, submit_position=5)
-    elif user.submit_position == 4:
-        jilebi.send_message(message.chat.id, "What is your Semester name:\nExample Semester 4")
-        user.update(submit_position=5)
-    elif user.submit_position == 5:
         text = """
 What are the modules you have?
 Example: send it like this

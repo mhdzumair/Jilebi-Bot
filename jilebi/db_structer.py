@@ -36,7 +36,7 @@ class TeleUsers(Document):
     feedback = BooleanField(default=False)
     submit = BooleanField(default=False)
     user_submit = EmbeddedDocumentField(UserSelection)
-    submit_position = IntField(choices=[0, 1, 2, 3, 4, 5, 6])
+    submit_position = IntField(choices=[0, 1, 2, 3, 4])
 
 
 class Semester(EmbeddedDocument):
