@@ -304,7 +304,7 @@ def submit_module_details(message):
 def submit_module_details(message):
     jilebi.send_message(message.chat.id, "What is your university name: \nexample: University of Moratuwa",
                         reply_markup=ReplyKeyboardRemove())
-    TeleUsers.objects(pk=message.chat.id).update(submit=True)
+    TeleUsers.objects(pk=message.chat.id).update(submit=True, submit_position=0)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Share Jilebi")
