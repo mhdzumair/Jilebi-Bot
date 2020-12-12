@@ -322,10 +322,12 @@ def submit_module_details(message):
 @jilebi.callback_query_handler(func=lambda call: call.data == "yes" or "no")
 def get_answer(call):
     if call.data == "yes":
-        jilebi.send_message(call.id, "What is your division / department name: \nExample: IT")
+        jilebi.send_message(call.chat.id, "What is your division / department name: \nExample: IT",
+                            reply_markup=ReplyKeyboardRemove)
         TeleUsers.objects(pk=call.id).update(submit_position=2)
     elif call.data == "no":
-        jilebi.send_message(call.id, "What is your Semester name:\nExample Semester 4")
+        jilebi.send_message(call.chat.id, "What is your Semester name:\nExample Semester 4",
+                            reply_markup=ReplyKeyboardRemove())
         TeleUsers.objects(pk=call.id).update(submit_position=3)
 
 
