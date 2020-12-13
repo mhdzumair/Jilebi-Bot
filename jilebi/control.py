@@ -319,16 +319,17 @@ def submit_module_details(message):
                                          "https://github.com/mhdzumair/Jilebi-Bot")
 
 
-@jilebi.callback_query_handler(func=lambda call: call.data == "yes" or "no")
-def get_answer(call):
-    if call.data == "yes":
-        jilebi.send_message(call.chat.id, "What is your division / department name: \nExample: IT",
-                            reply_markup=ReplyKeyboardRemove)
-        TeleUsers.objects(pk=call.id).update(submit_position=2)
-    elif call.data == "no":
-        jilebi.send_message(call.chat.id, "What is your Semester name:\nExample Semester 4",
+@jilebi.message_handler(func=lambda message: (message.text == "Yes" or message.text == "No") and TeleUsers.objects.only(
+    "submit_position").get(pk=message.chat.id).submit_position == 1)
+def get_answer(message):
+    if message.text == "Yes":
+        jilebi.send_message(message.chat.id, "What is your division / department name: \nExample: IT",
                             reply_markup=ReplyKeyboardRemove())
-        TeleUsers.objects(pk=call.id).update(submit_position=3)
+        TeleUsers.objects(pk=message.chat.id).update(submit_position=2)
+    elif message.text == "No":
+        jilebi.send_message(message.chat.id, "What is your Semester name:\nExample Semester 4",
+                            reply_markup=ReplyKeyboardRemove())
+        TeleUsers.objects(pk=message.chat.id).update(submit_position=3)
 
 
 @jilebi.message_handler(content_types=["sticker"])
@@ -368,7 +369,9 @@ def handle_submission(message):
     elif user.submit_position == 3:
         text = """
 What are the modules you have?
+
 Example: send it like this
+
 (Module Code) : (Module Name)
 In19-S04-IT2401 : Business Intelligence and Analytics,
 In19-S04-IT2402 : Cloud Computing,
@@ -381,7 +384,9 @@ In19-S04-IT2408 : Software Testing & Quality Controlling,
 In19-S04-IS2401 : Communication Skills and Technical Writing,
 In19-S04-IS2402 : Industrial Statistics and Modelling Computation
 
-module code format: In(Your university entered year)-(Your Semester number)-(Module code)
+module code format:
+
+In(Your university entered year)-(Your Semester number)-(Module code)
 """
         jilebi.send_message(message.chat.id, text)
         user.update(user_submit__semester=message.text, submit_position=6)
@@ -390,10 +395,11 @@ module code format: In(Your university entered year)-(Your Semester number)-(Mod
                                              "We will review and update our database ASAP!")
         keyboard.send_extras(message)
         jilebi.forward_message("606319743", message.chat.id, message.message_id)
-        text = f"""university: {user.user_submit.university}
-        faculty: {user.user_submit.faculty}
-        division: {user.user_submit.division}
-        semester: {user.user_submit.semester}
+        text = f"""
+university: {user.user_submit.university}
+faculty: {user.user_submit.faculty}
+division: {user.user_submit.division}
+semester: {user.user_submit.semester}
         """
         jilebi.send_message("606319743", text)
         user.update(unset__user_submit=1, unset__submit_position=1, submit=False)

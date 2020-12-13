@@ -114,9 +114,7 @@ class Keyboard:
         self.jilebi.send_message(message.chat.id, "Select Item: ", reply_markup=reply_markup)
 
     def ask_division(self, message):
-        inline_markup = InlineKeyboardMarkup(row_width=2)
-        inline_markup.add(InlineKeyboardButton("Yes", callback_data="yes"),
-                          InlineKeyboardButton("No", callback_data="no"),
-                          InlineKeyboardButton("test", "https://www.google.com"))
+        reply_markup = ReplyKeyboardMarkup(row_width=2, one_time_keyboard=True)
+        reply_markup.row("Yes", "No")
         self.jilebi.send_message(message.chat.id, "Are you have Divisions / Department inside your faculty?",
-                                 reply_markup=inline_markup)
+                                 reply_markup=reply_markup)
