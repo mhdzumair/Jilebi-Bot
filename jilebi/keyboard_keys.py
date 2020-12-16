@@ -75,13 +75,11 @@ class Keyboard:
         if user.selection.division:
             semesters = University.objects.only("faculty__name", "faculty__division__name",
                                                 "faculty__division__semester__name").get(
-                name=user.selection.university, faculty__name=user.selection.faculty,
-                faculty__division__name=user.selection.division).faculty.get(
-                name=user.selection.faculty).division.get(name=user.selection.division).semester
+                name=user.selection.university).faculty.get(name=user.selection.faculty).division.get(
+                name=user.selection.division).semester
         else:
-            semesters = University.objects.only("faculty__name", "faculty__division__name").get(
-                name=user.selection.university, faculty__name=user.selection.faculty).faculty.get(
-                name=user.selection.faculty).semester
+            semesters = University.objects.only("faculty__name", "faculty__semester__name").get(
+                name=user.selection.university).faculty.get(name=user.selection.faculty).semester
 
         reply_markup.add(*[KeyboardButton(semester.name) for semester in semesters])
         reply_markup.add(self.back_btn, self.main_menu)
