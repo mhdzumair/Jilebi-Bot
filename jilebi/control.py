@@ -75,9 +75,14 @@ This bot is for viewing Universities schedules.
 
 * Get image based of text based result.
 
-* if you don't know what is calender link, please enter /tutorial to see the tutorial.
+* If you don't know what is calender link, please enter /tutorial to see the tutorial.
 
-* If you have any doubt or feedback or feature implementation ideas, please feel free to DM
+* If your module details are not present please go to extra -> submit module details.
+
+* If you have any doubt or feedback or feature implementation ideas, please feel free please go to extra -> 
+send queries.
+
+* You can get the source code under extra menu. It is Open source.
 """
 
     jilebi.send_message(message.chat.id, text)
@@ -177,14 +182,14 @@ def set_subscribe(message):
 
     TeleUsers.objects(pk=message.chat.id).update(is_subscriber=True)
     jilebi.reply_to(message, "successfully subscribe to get notification before 30 of an event")
-    keyboard.send_settings(message)
+    send_setting(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Unsubscribe Notification")
 def set_unsubscribe(message):
     TeleUsers.objects(pk=message.chat.id).update(is_subscriber=False)
     jilebi.reply_to(message, "successfully unsubscribe the notification")
-    keyboard.send_settings(message)
+    send_setting(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text is not None and (
@@ -200,7 +205,6 @@ def link_parser(message):
         TeleUsers.objects.only("calendar").get(pk=message.chat.id).update(calendar=calendar)
         jilebi.reply_to(message, "Successfully saved your link")
         set_subscribe(message)
-        send_setting(message)
     except [IndexError, TypeError]:
         jilebi.reply_to(message, f"sorry, i can't understand you url: {url}\nplease your problem to admin")
 
@@ -208,35 +212,6 @@ def link_parser(message):
 @jilebi.message_handler(func=lambda message: message.text == "See Other University Students Events")
 def send_university(message):
     keyboard.send_university(message)
-
-
-@jilebi.message_handler(func=lambda message: message.text in University.objects.distinct("name"))
-def send_faculty(message):
-    TeleUsers.objects(pk=message.chat.id).update(selection__university=message.text)
-    keyboard.send_faculty(message)
-
-
-@jilebi.message_handler(func=lambda message: message.text in University.objects.distinct("faculty.name"))
-def send_division(message):
-    user = TeleUsers.objects.get(pk=message.chat.id)
-    user.update(selection__faculty=message.text)
-    if University.objects(name=user.selection.university, faculty__name=user.selection.faculty).count:
-        keyboard.send_division(message)
-    else:
-        send_semester(message)
-
-
-@jilebi.message_handler(func=lambda message: message.text in University.objects.distinct("faculty.division.name"))
-def send_semester(message):
-    TeleUsers.objects(pk=message.chat.id).update(selection__division=message.text)
-    keyboard.send_semester(message)
-
-
-@jilebi.message_handler(func=lambda message: message.text in University.objects.distinct(
-    "faculty.division.semester.name") or message.text in University.objects.distinct("faculty.semester.name"))
-def send_others_menu(message):
-    TeleUsers.objects(pk=message.chat.id).update(selection__semester=message.text)
-    keyboard.send_others_menu(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Today Events")
@@ -322,14 +297,41 @@ def submit_module_details(message):
 
 @jilebi.message_handler(func=lambda message: message.text == "Share Jilebi")
 def share_jilebi(message):
-    jilebi.send_message(message.chat.id, "Thanks for sharing Jilebi\n"
-                                         "Share this URL: https://t.me/JilebiBot")
+    jilebi.send_message(message.chat.id, "Thanks for sharing Jilebi😍😍 Share this URL 👇\n https://t.me/JilebiBot")
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Source Code")
 def send_source_code(message):
-    jilebi.send_message(message.chat.id, "Thanks for giving time to see my code!\nPlease give me support\n"
+    jilebi.send_message(message.chat.id, "Thanks for giving time to see my code!\nPlease give me support 🥰🥰🥰\n"
                                          "https://github.com/mhdzumair/Jilebi-Bot")
+
+
+@jilebi.message_handler(func=lambda message: TeleUsers.objects.only("position").get(pk=message.chat.id).position == 1)
+def send_faculty(message):
+    TeleUsers.objects(pk=message.chat.id).update(selection__university=message.text)
+    keyboard.send_faculty(message)
+
+
+@jilebi.message_handler(func=lambda message: TeleUsers.objects.only("position").get(pk=message.chat.id).position == 2)
+def send_division(message):
+    user = TeleUsers.objects.get(pk=message.chat.id)
+    user.update(selection__faculty=message.text)
+    if University.objects(name=user.selection.university, faculty__name=user.selection.faculty).count:
+        keyboard.send_division(message)
+    else:
+        send_semester(message)
+
+
+@jilebi.message_handler(func=lambda message: TeleUsers.objects.only("position").get(pk=message.chat.id).position == 3)
+def send_semester(message):
+    TeleUsers.objects(pk=message.chat.id).update(selection__division=message.text)
+    keyboard.send_semester(message)
+
+
+@jilebi.message_handler(func=lambda message: TeleUsers.objects.only("position").get(pk=message.chat.id).position == 4)
+def send_others_menu(message):
+    TeleUsers.objects(pk=message.chat.id).update(selection__semester=message.text)
+    keyboard.send_others_menu(message)
 
 
 @jilebi.message_handler(func=lambda message: (message.text == "Yes" or message.text == "No") and TeleUsers.objects.only(
