@@ -316,10 +316,10 @@ def send_faculty(message):
 def send_division(message):
     user = TeleUsers.objects.get(pk=message.chat.id)
     user.update(selection__faculty=message.text)
-    if University.objects.get(name=user.selection.university).faculty.get(name=user.selection.faculty).division:
+    if University.objects.get(name=user.selection.university).faculty.get(name=message.text).division:
         keyboard.send_division(message)
     else:
-        send_semester(message)
+        keyboard.send_semester(message)
 
 
 @jilebi.message_handler(func=lambda message: TeleUsers.objects.only("position").get(pk=message.chat.id).position == 3)
