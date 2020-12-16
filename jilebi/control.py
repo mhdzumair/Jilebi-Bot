@@ -316,7 +316,7 @@ def send_faculty(message):
 def send_division(message):
     user = TeleUsers.objects.get(pk=message.chat.id)
     user.update(selection__faculty=message.text)
-    if University.objects(name=user.selection.university, faculty__name=user.selection.faculty).count:
+    if University.objects.get(name=user.selection.university).faculty.get(name=user.selection.faculty).division:
         keyboard.send_division(message)
     else:
         send_semester(message)
