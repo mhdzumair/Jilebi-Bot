@@ -1,0 +1,15 @@
+{
+  "plugins": [
+    "remark-preset-lint-recommended",
+    ["remark-lint-list-item-indent", true],
+    ["remark-lint-write-good", ["warn", {
+            "passive": false,
+            "whitelist": [ "read-only" ]
+        }]],
+    "remark-lint-emphasis-marker",
+    "lint",
+    "lint-alphabetize-lists",
+    "remark-preset-lint-markdown-style-guide",
+    "remark-lint-strong-marker"
+  ]
+}

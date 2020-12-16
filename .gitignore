@@ -7,3 +7,6 @@ venv/
 # ignore coverage files
 .coverage
 coverage.xml
+
+node_modules/
+package-lock.json
