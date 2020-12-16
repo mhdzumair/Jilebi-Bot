@@ -70,7 +70,7 @@ def get_events(chat_id, period, is_user, start=None, end=None):
     if is_user:
         calendar = TeleUsers.objects.only("calendar").get(pk=chat_id).calendar
     else:
-        calendar = get_semester(chat_id).calendar
+        calendar = get_semester(chat_id).donor_calendar
 
     url = f"https://{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken=" \
           f"{calendar.token}&preset_what=all&preset_time={period}"

@@ -81,13 +81,25 @@ This bot is for viewing Universities schedules.
 """
 
     jilebi.send_message(message.chat.id, text)
-    keyboard.send_home(message)
+    cancel_process(message)
 
 
 @jilebi.message_handler(commands=["tutorial"])
 def send_tutorial(message):
     jilebi.send_video(message.chat.id, "BAACAgUAAxkBAAICxF_IZo9v1LxfzBSGpj5Ytk1n_WDuAAI8AgACOYNIVvzCpN04fH0rHgQ",
                       52, "tutorial for parsing calendar link")
+
+
+@jilebi.message_handler(commands=["cancel"])
+def cancel_process(message):
+    user = TeleUsers.objects.get(pk=message.chat.id)
+    if user.submit:
+        jilebi.send_message(message.chat.id, "successfully cancel the module submission.")
+    elif user.feedback:
+        jilebi.send_message(message.chat.id, "successfully cancel the feedback.")
+
+    user.update(unset__user_submit=1, unset__submit_position=1, submit=False, feedback=False)
+    keyboard.send_home(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Today Events")
@@ -187,7 +199,8 @@ def link_parser(message):
         calendar.token = queries.split("&")[1].split("=")[1]
         TeleUsers.objects.only("calendar").get(pk=message.chat.id).update(calendar=calendar)
         jilebi.reply_to(message, "Successfully saved your link")
-        keyboard.send_home(message)
+        set_subscribe(message)
+        send_setting(message)
     except [IndexError, TypeError]:
         jilebi.reply_to(message, f"sorry, i can't understand you url: {url}\nplease your problem to admin")
 
@@ -221,7 +234,7 @@ def send_semester(message):
 
 @jilebi.message_handler(func=lambda message: message.text in University.objects.distinct(
     "faculty.division.semester.name") or message.text in University.objects.distinct("faculty.semester.name"))
-def send_modules(message):
+def send_others_menu(message):
     TeleUsers.objects(pk=message.chat.id).update(selection__semester=message.text)
     keyboard.send_others_menu(message)
 
@@ -255,14 +268,14 @@ def send_module_list(message):
 def set_text_based(message):
     TeleUsers.objects(pk=message.chat.id).update(is_image_result=False)
     jilebi.reply_to(message, "Successfully setup for Text based result.")
-    keyboard.send_settings(message)
+    send_setting(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Image based result")
 def set_image_based(message):
     TeleUsers.objects(pk=message.chat.id).update(is_image_result=True)
     jilebi.reply_to(message, "Successfully setup for Image based result.")
-    keyboard.send_settings(message)
+    send_setting(message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Main Menu")
@@ -296,7 +309,7 @@ def send_back(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Extra")
-def submit_module_details(message):
+def send_extra_menu(message):
     keyboard.send_extras(message)
 
 
@@ -308,13 +321,13 @@ def submit_module_details(message):
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Share Jilebi")
-def submit_module_details(message):
+def share_jilebi(message):
     jilebi.send_message(message.chat.id, "Thanks for sharing Jilebi\n"
                                          "Share this URL: https://t.me/JilebiBot")
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Source Code")
-def submit_module_details(message):
+def send_source_code(message):
     jilebi.send_message(message.chat.id, "Thanks for giving time to see my code!\nPlease give me support\n"
                                          "https://github.com/mhdzumair/Jilebi-Bot")
 

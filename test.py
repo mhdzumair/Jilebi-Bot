@@ -1,16 +1,16 @@
 from unittest import TestCase, main
 
+from PIL.Image import Image
 from arrow import get
 from icalevents.icalparser import Event
-from PIL.Image import Image
 from telebot.types import Message, Chat
 
-from jilebi import TeleUsers, jilebi, get_events, get_module_name, create_image, Keyboard
+from jilebi import *
 
 
 class GeneralTest(TestCase):
     def test_db_connection(self):
-        self.assertEqual(TeleUsers.objects.only("username").first().username, "Mohamed_Zumair",
+        self.assertEqual(TeleUsers.objects.only("username").get(pk=606319743).username, "Mohamed_Zumair",
                          "Failed to connect database")
 
     def test_telegram_bot(self):
@@ -22,15 +22,14 @@ class GeneralTest(TestCase):
                       "Webhook address error")
 
     def test_get_events(self):
-        self.assertIsInstance(get_events(606319743, "weeknow", True), list,
-                              "Failed to get my Moodle events")
+        self.assertTrue(isinstance(get_events(606319743, "weeknow", True), (list, type(None))),
+                        "Failed to get my Moodle events")
 
     def test_get_module_name(self):
         self.assertEqual(get_module_name("In19-S04-IT2408"), "Software Testing & Quality Controlling",
                          "failed to get module name")
 
     def test_create_image_events(self):
-
         def testing(event_s):
             self.assertIsInstance(create_image(event_s), Image, "Create image is failed")
 
@@ -44,37 +43,73 @@ class GeneralTest(TestCase):
         testing(events)
 
 
-class TestKeyboards(TestCase):
-    message = Message(None, None, [None], Chat(606319743, None), [], [], {})
-    keyboard = Keyboard(jilebi)
+class TestJilebi(TestCase):
+    message = Message(None, None, [None], Chat(606319743, None, username="Mohamed_Zumair"), [], [], {})
 
-    def test_send_home(self):
-        self.assertIsNone(self.keyboard.send_home(self.message), "Error in sending home button")
+    def test_send_welcome(self):
+        self.assertIsNone(send_welcome(self.message))
 
-    def test_send_university(self):
-        self.assertIsNone(self.keyboard.send_university(self.message), "Error in sending university")
+    def test_send_tutorial(self):
+        self.assertIsNone(send_tutorial(self.message))
 
-    def test_send_faculty(self):
-        TeleUsers.objects(pk=self.message.chat.id).update(selection__university="University of Moratuwa")
-        self.assertIsNone(self.keyboard.send_faculty(self.message), "Error in sending faculty")
+    def test_send_user_events(self):
+        set_text_based(self.message)
+        self.assertIsNone(send_user_today_event(self.message))
+        self.assertIsNone(send_user_tomorrow_event(self.message))
+        self.assertIsNone(send_user_week_event(self.message))
+        self.assertIsNone(send_user_month_event(self.message))
 
-    def test_send_division(self):
-        TeleUsers.objects(pk=self.message.chat.id).update(selection__university="University of Moratuwa",
-                                                          selection__faculty="NDT")
-        self.assertIsNone(self.keyboard.send_division(self.message), "Error in sending division")
+    def test_calendar_link(self):
+        self.message.text = "https://lms.itum.mrt.ac.lk/calendar/export_execute.php?userid=729&authtoken" \
+                            "=9c97a00bcfcd6cf0b5cc1144749a2dc4c43b4af1&preset_what=all&preset_time=weeknow "
+        self.assertIsNone(link_parser(self.message))
+        self.assertIsNone(check_link(self.message))
 
-    def test_send_semester(self):
-        TeleUsers.objects(pk=self.message.chat.id).update(selection__university="University of Moratuwa",
-                                                          selection__faculty="NDT",
-                                                          selection__division="IT")
-        self.assertIsNone(self.keyboard.send_semester(self.message), "Error in sending semester")
+    def test_subscribe(self):
+        self.assertIsNone(set_unsubscribe(self.message))
+        self.assertIsNone(set_subscribe(self.message))
 
-    def test_send_others_menu(self):
-        TeleUsers.objects(pk=self.message.chat.id).update(selection__university="University of Moratuwa",
-                                                          selection__faculty="NDT",
-                                                          selection__division="IT",
-                                                          selection__semester="Semester 4")
-        self.assertIsNone(self.keyboard.send_others_menu(self.message), "Error in sending others menu")
+    def test_others_events(self):
+        set_text_based(self.message)
+        self.assertIsNone(send_university(self.message), "Error in sending university")
+        self.message.text = "University of Moratuwa"
+        self.assertIsNone(send_faculty(self.message), "Error in sending faculty")
+        self.message.text = "NDT"
+        self.assertIsNone(send_division(self.message), "Error in sending division")
+        self.message.text = "IT"
+        self.assertIsNone(send_semester(self.message), "Error in sending semester")
+        self.message.text = "Semester 4"
+        self.assertIsNone(send_others_menu(self.message), "Error in sending others menu")
+        self.assertIsNone(send_today_event(self.message), "Error in Send Today event from  NDT IT S04")
+        self.assertIsNone(send_tomorrow_event(self.message), "Error in Send Tomorrow event from  NDT IT S04")
+        self.assertIsNone(send_week_event(self.message), "Error in Send week event from  NDT IT S04")
+        self.assertIsNone(send_month_event(self.message), "Error in Send month event from  NDT IT S04")
+        self.assertIsNone(send_module_list(self.message), "Error in Send module list  from  NDT IT S04")
+        self.assertIsNone(send_back(self.message), "Error in Send back from  NDT IT S04")
+        self.assertIsNone(send_back(self.message), "Error in Send back from  NDT IT")
+        self.assertIsNone(send_back(self.message), "Error in Send back from  NDT")
+        self.assertIsNone(send_to_main(self.message), "Error in Send main menu")
+
+    def test_text_based_result(self):
+        self.assertIsNone(set_text_based(self.message), "cannot set to text based result")
+        self.assertIsNone(send_user_today_event(self.message), "cannot send today event as text based")
+
+    def test_image_based_result(self):
+        self.assertIsNone(set_image_based(self.message), "cannot set to image based result")
+        self.assertIsNone(send_user_today_event(self.message), "cannot send today event as image based")
+
+    def test_submit_module_detail(self):
+        self.assertIsNone(submit_module_details(self.message))
+        self.message.text = "University of Moratuwa"
+        self.assertIsNone(handle_all(self.message))
+        self.message.text = "NDT"
+        self.assertIsNone(handle_all(self.message))
+        self.message.text = "Yes"
+        self.assertIsNone(get_answer(self.message))
+        self.message.text = "IT"
+        self.assertIsNone(handle_all(self.message))
+        self.message.text = "Semester 4"
+        self.assertIsNone(handle_all(self.message))
 
 
 if __name__ == '__main__':

@@ -1,8 +1,6 @@
 from telebot.types import (ReplyKeyboardMarkup,
                            KeyboardButton,
-                           ReplyKeyboardRemove,
-                           InlineKeyboardButton,
-                           InlineKeyboardMarkup)
+                           ReplyKeyboardRemove)
 
 from .db_structer import TeleUsers, University
 from .model import get_semester
