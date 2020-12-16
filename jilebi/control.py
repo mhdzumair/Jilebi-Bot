@@ -260,24 +260,27 @@ def send_to_main(message):
 
 @jilebi.message_handler(func=lambda message: message.text == "Back")
 def send_back(message):
-    position = TeleUsers.objects.only("position").get(pk=message.chat.id).position
+    user = TeleUsers.objects.only("position", "selection__division").get(pk=message.chat.id)
+    position = user.position
     if position == 1:
         keyboard.send_home(message)
-        TeleUsers.objects(pk=message.chat.id).update(unset__selection=1)
+        user.update(unset__selection=1)
     elif position == 2:
         keyboard.send_university(message)
-        TeleUsers.objects(pk=message.chat.id).update(unset__selection__faculty=1)
+        user.update(unset__selection__university=1)
     elif position == 3:
         keyboard.send_faculty(message)
-        TeleUsers.objects(pk=message.chat.id).update(unset__selection__division=1)
+        user.update(unset__selection__faculty=1)
     elif position == 4:
-        if TeleUsers.objects.only("selection__division").get(pk=message.chat.id).selection.division:
+        if user.selection.division:
             keyboard.send_division(message)
+            user.update(unset__selection__division=1)
         else:
             keyboard.send_faculty(message)
-        TeleUsers.objects(pk=message.chat.id).update(unset__selection__semester=1)
+            user.update(unset__selection__faculty=1)
     elif position == 5:
         keyboard.send_semester(message)
+        user.update(unset__selection__semester=1)
     else:
         jilebi.send_message(message.chat.id, "Sorry, we lost the trace!\r\nRedirecting to Main Menu")
         keyboard.send_home(message)
