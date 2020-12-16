@@ -17,7 +17,7 @@ connect("jilebi", host=environ.get("MONGO_HOST"),
 
 def get_module_name(module_code):
     modules_list = University.objects.distinct("faculty.division.semester.modules")
-    modules_list.append(University.objects.distinct("faculty.semester.modules"))
+    modules_list.append(*University.objects.distinct("faculty.semester.modules"))
     modules_dict = {}
     for module in modules_list:
         modules_dict.update(module)
