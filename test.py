@@ -16,7 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from unittest import TestCase, main
+from unittest import TestCase
 
 from PIL.Image import Image
 from arrow import get
@@ -72,6 +72,11 @@ class GeneralTest(TestCase):
         testing(event)
         testing(events)
 
+    def test_exception_handle(self):
+        exception = control.ExceptionHandler()
+        exception.args = [1, "testing"]
+        self.assertTrue(exception.handle(), "Exception was not handled")
+
 
 class TestJilebi(TestCase):
     message = Message(
@@ -92,6 +97,7 @@ class TestJilebi(TestCase):
         self.assertIsNone(control.send_user_month_event(self.message))
 
     def test_calendar_link(self):
+        self.assertIsNone(control.setup_link(self.message))
         self.message.text = (
             "https://lms.itum.mrt.ac.lk/calendar/export_execute.php?userid=729&authtoken"
             "=9c97a00bcfcd6cf0b5cc1144749a2dc4c43b4af1&preset_what=all&preset_time=weeknow "
@@ -153,6 +159,18 @@ class TestJilebi(TestCase):
         self.assertIsNone(
             control.send_back(self.message), "Error in Send back from  NDT"
         )
+        self.message.text = "IT"
+        self.assertIsNone(
+            control.send_division(self.message), "Error in sending division"
+        )
+        self.message.text = "Semester 2"
+        self.assertIsNone(
+            control.send_others_menu(self.message), "Error in sending others menu"
+        )
+        self.assertIsNone(
+            control.send_today_event(self.message),
+            "Error in Send Today event from IT S02",
+        )
         self.assertIsNone(control.send_to_main(self.message), "Error in Send main menu")
 
     def test_text_based_result(self):
@@ -185,7 +203,32 @@ class TestJilebi(TestCase):
         self.assertIsNone(control.handle_all(self.message))
         self.message.text = "Semester 4"
         self.assertIsNone(control.handle_all(self.message))
+        self.message.text = """
+In19-S04-IT2401 : Business Intelligence and Analytics,
+In19-S04-IT2402 : Cloud Computing,
+In19-S04-IT2403 : Digital Marketing,
+In19-S04-IT2404 : Intelligent Systems & Machine Learning,
+In19-S04-IT2405 : Internet of Things,
+In19-S04-IT2406 : Mobile Communication,
+In19-S04-IT2407 : Project II,
+In19-S04-IT2408 : Software Testing & Quality Controlling,
+In19-S04-IS2401 : Communication Skills and Technical Writing,
+In19-S04-IS2402 : Industrial Statistics and Modelling Computation        
+"""
+        message = jilebi.send_message(self.message.chat.id, self.message.text)
+        self.assertIsInstance(message, Message, "couldn't get message instance")
+        self.assertIsNone(control.handle_all(message))
 
+    def test_feedback(self):
+        self.assertIsNone(control.get_feedback(self.message))
+        self.message.text = "Hi Mhd"
+        message = jilebi.send_message(self.message.chat.id, self.message.text)
+        self.assertIsInstance(message, Message, "couldn't get message instance")
+        self.assertIsNone(control.handle_all(message))
 
-if __name__ == "__main__":
-    main()
+    def test_extras(self):
+        self.assertIsNone(control.share_jilebi(self.message))
+        self.assertIsNone(control.send_source_code(self.message))
+
+    def test_send_notification(self):
+        self.assertIsNone(control.send_notification(), "Error in send notification")
