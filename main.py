@@ -10,7 +10,7 @@ from jilebi import jilebi, send_notification, TeleUsers
 server = Flask(__name__)
 
 
-@server.route('/' + environ.get("JILEBI_TOKEN"), methods=['POST'])
+@server.route("/" + environ.get("JILEBI_TOKEN"), methods=["POST"])
 def get_message():
     jilebi.process_new_updates([Update.de_json(request.stream.read().decode("utf-8"))])
     return "POST", 200
@@ -19,7 +19,9 @@ def get_message():
 @server.route("/")
 def web_hook():
     jilebi.remove_webhook()
-    jilebi.set_webhook(url='https://jilebibot.herokuapp.com/' + environ.get("JILEBI_TOKEN"))
+    jilebi.set_webhook(
+        url="https://jilebibot.herokuapp.com/" + environ.get("JILEBI_TOKEN")
+    )
     return "CONNECTED", 200
 
 
@@ -30,14 +32,16 @@ def get_user_count():
 
 def main():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(send_notification, IntervalTrigger(minutes=30, timezone="Asia/Colombo"))
+    scheduler.add_job(
+        send_notification, IntervalTrigger(minutes=30, timezone="Asia/Colombo")
+    )
     send_notification()
     scheduler.start()
     try:
-        server.run(host="0.0.0.0", port=environ.get('PORT', 5000))
+        server.run(host="0.0.0.0", port=environ.get("PORT", 5000))
     except KeyboardInterrupt:
         print("Shutdown the bot...")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

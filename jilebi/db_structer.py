@@ -78,7 +78,7 @@ class Photo(Document):
     font1 = EmbeddedDocumentField(Font)
     font2 = EmbeddedDocumentField(Font)
 
-    meta = {'allow_inheritance': True}
+    meta = {"allow_inheritance": True}
 
 
 class SingleEvent(Photo):

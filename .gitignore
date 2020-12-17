@@ -3,10 +3,12 @@
 venv/
 .idea/
 *.pyc
+.vscode
 
 # ignore coverage files
 .coverage
 coverage.xml
 
+# ignore the npm packages
 node_modules/
 package-lock.json
