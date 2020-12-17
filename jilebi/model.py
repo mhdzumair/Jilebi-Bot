@@ -129,7 +129,7 @@ def get_events(chat_id, period, is_user, start=None, end=None):
         calendar = get_semester(chat_id).donor_calendar
 
     url = (
-        f"https://{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken="
+        f"http://{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken="
         f"{calendar.token}&preset_what=all&preset_time={period}"
     )
     response = None

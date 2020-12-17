@@ -228,7 +228,7 @@ def check_link(message):
     calendar = TeleUsers.objects.only("calendar").get(pk=message.chat.id).calendar
     if calendar:
         url = (
-            f"https://{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken="
+            f"http://{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken="
             f"{calendar.token}&preset_what=all&preset_time=monthnow"
         )
         jilebi.send_message(message.chat.id, "Your URL: \n" + url)
@@ -262,7 +262,7 @@ def set_unsubscribe(message):
 
 @jilebi.message_handler(
     func=lambda message: message.text is not None
-    and ("https://" and "userid" and "authtoken") in message.text
+    and ("http" and "userid" and "authtoken") in message.text
 )
 def link_parser(message):
     url = message.text
