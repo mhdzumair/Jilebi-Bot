@@ -1,3 +1,21 @@
+"""
+  Copyright (c) 2020 Mohamed Zumair <mhdzumair@gmail.com>.
+
+  This file is part of Jilebi-Bot.
+
+  Jilebi-Bot is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or any later version.
+
+  Jilebi-Bot is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
 from .db_structer import TeleUsers, University
@@ -9,7 +27,11 @@ class Keyboard:
         """
         Handle all telegram keyboard keys
         :param bot: telebot bot API
+        attributes:
+            back_btn : KeyboardMarkup Button for back
+            main_menu: KeyboardMarkup Button for main menu
         """
+
         self.jilebi = bot
         self.back_btn = KeyboardButton("Back")
         self.main_menu = KeyboardButton("Main Menu")

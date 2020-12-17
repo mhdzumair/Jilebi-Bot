@@ -1,3 +1,21 @@
+"""
+  Copyright (c) 2020 Mohamed Zumair <mhdzumair@gmail.com>.
+
+  This file is part of Jilebi-Bot.
+
+  Jilebi-Bot is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or any later version.
+
+  Jilebi-Bot is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 from mongoengine import (
     EmbeddedDocument,
     EmbeddedDocumentField,
@@ -26,6 +44,11 @@ class Calendar(EmbeddedDocument):
 
 
 class TeleUsers(Document):
+    """
+    Structure of Telegram user mongo db collection
+    chat_id, username are required for initializing data
+    """
+
     chat_id = IntField(required=True, primary_key=True)
     username = StringField(required=True)
     is_subscriber = BooleanField(default=False)
@@ -58,6 +81,10 @@ class Faculty(EmbeddedDocument):
 
 
 class University(Document):
+    """
+    Structure for storing University data collection
+    """
+
     name = StringField(required=True, unique=True)
     faculty = EmbeddedDocumentListField(Faculty, required=True)
 
@@ -74,6 +101,10 @@ class TextImage(EmbeddedDocument):
 
 
 class Photo(Document):
+    """
+    Base class for string auto generated image properties
+    """
+
     name = StringField(required=True, unique=True)
     font1 = EmbeddedDocumentField(Font)
     font2 = EmbeddedDocumentField(Font)

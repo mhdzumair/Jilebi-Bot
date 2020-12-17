@@ -32,7 +32,7 @@ You can watch the tutorial by sending `/tutorial`
 You can still view other's events.
 
 ### Requirements for Development
-```
+```pip
     pyTelegramBotAPI
     mongoengine
     pymongo[srv]

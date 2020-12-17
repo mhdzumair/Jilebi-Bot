@@ -1,3 +1,21 @@
+"""
+  Copyright (c) 2020 Mohamed Zumair <mhdzumair@gmail.com>.
+
+  This file is part of Jilebi-Bot.
+
+  Jilebi-Bot is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or any later version.
+
+  Jilebi-Bot is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 from os import environ
 from random import choice
 from textwrap import fill, shorten
@@ -20,6 +38,11 @@ connect(
 
 
 def get_module_name(module_code):
+    """
+    Get the module name for the module_code
+    :param module_code: code name of the module which is retrieved from event.categories[0]
+    :return: if the module name was in the database then module name will return or else module_code will return
+    """
     modules_list = University.objects.distinct("faculty.division.semester.modules")
     modules_list.append(*University.objects.distinct("faculty.semester.modules"))
     modules_dict = {}
@@ -32,6 +55,11 @@ def get_module_name(module_code):
 
 
 def get_semester(chat_id):
+    """
+    Get the semester data
+    :param chat_id: telegram user id
+    :return: Semester
+    """
     select = TeleUsers.objects.only("selection").get(pk=chat_id).selection
     if select.division:
         semester = (
@@ -56,6 +84,11 @@ def get_semester(chat_id):
 
 
 def format_events(response):
+    """
+    Format calendar events properties to string
+    :param response: calendar events (icalevents.icalparser.Event)
+    :return: formatted result (string)
+    """
     result = ""
     if response:
         for event in response:
@@ -81,6 +114,15 @@ def format_events(response):
 
 
 def get_events(chat_id, period, is_user, start=None, end=None):
+    """
+    Get the events from Moodle calendar API
+    :param chat_id: Telegram user id
+    :param period: Moodle calendar preset_time ["weeknow", "weeknext", "monthnow", "monthnext"]
+    :param is_user: check if this get_events for user's events or other's events
+    :param start: events start datetime / date
+    :param end: evets end datetime / date
+    :return: calendar events (icalevents.icalparser.Event)
+    """
     if is_user:
         calendar = TeleUsers.objects.only("calendar").get(pk=chat_id).calendar
     else:
@@ -105,6 +147,11 @@ def get_events(chat_id, period, is_user, start=None, end=None):
 
 
 def is_calendar_present(message):
+    """
+    check whether user setup the calendar link
+    :param message: message from user
+    :return: (boolean)
+    """
     try:
         if TeleUsers.objects.only("calendar").get(pk=message.chat.id).calendar:
             return True
@@ -114,6 +161,10 @@ def is_calendar_present(message):
 
 
 def create_user(message):
+    """
+    Create a new user data
+    :param message: message from user
+    """
     try:
         TeleUsers.objects.only("pk").get(pk=message.chat.id)
     except DoesNotExist:
@@ -187,6 +238,11 @@ def place_text(image, place, event, size, fonts, rotate):
 
 
 def create_image(event):
+    """
+    Create image for users events
+    :param event: single event or double event (event / [event, event])
+    :return: Image file with placed events
+    """
     if isinstance(event, list):
         photo = DoubleEvent.objects.get(pk=choice(DoubleEvent.objects.distinct("pk")))
     else:
@@ -226,6 +282,11 @@ def create_image(event):
 
 
 def format_notification(event):
+    """
+    Format the Reminder notification
+    :param event: events to be held within half an hour
+    :return: formatted events string
+    """
     string = "You have "
     string += event.summary.strip().replace("&amp;", "&") + "\r\n"
     try:
@@ -247,6 +308,11 @@ def format_notification(event):
 
 
 def find_half_hour_events(chat_id):
+    """
+    Find events to be held within half an hour
+    :param chat_id: telegram user id
+    :return: notification (string) / None
+    """
     now_time = now("Asia/Colombo")
     half_hour = now_time.shift(minutes=30)
     response = get_events(
@@ -267,6 +333,12 @@ def find_half_hour_events(chat_id):
 
 
 def find_today_events(chat_id, is_user):
+    """
+    Find user's & other's today events
+    :param chat_id: telegram user id (int / string)
+    :param is_user: (Boolean)
+    :return: Today events
+    """
     today = now("Asia/Colombo")
     return get_events(
         chat_id,
@@ -278,6 +350,12 @@ def find_today_events(chat_id, is_user):
 
 
 def find_tomorrow_events(chat_id, is_user):
+    """
+    Find user's & other's tomorrow events
+    :param chat_id: telegram user id (int / string)
+    :param is_user: (Boolean)
+    :return: Tomorrow events
+    """
     tomorrow = now("Asia/Colombo").shift(days=1)
     if tomorrow.weekday():
         period = "weeknow"
@@ -294,6 +372,12 @@ def find_tomorrow_events(chat_id, is_user):
 
 
 def find_week_events(chat_id, is_user):
+    """
+    Find user's & other's week events
+    :param chat_id: telegram user id (int / string)
+    :param is_user: (Boolean)
+    :return: Week events
+    """
     week_start = now("Asia/Colombo").floor("week")
     week_end = week_start.ceil("week")
     return get_events(
@@ -302,6 +386,12 @@ def find_week_events(chat_id, is_user):
 
 
 def find_month_events(chat_id, is_user):
+    """
+    Find user's & other's month events
+    :param chat_id: telegram user id (int / string)
+    :param is_user: (Boolean)
+    :return: Month events
+    """
     month_start = now("Asia/Colombo").floor("month")
     month_end = month_start.ceil("month")
     return get_events(
@@ -310,6 +400,11 @@ def find_month_events(chat_id, is_user):
 
 
 def get_modules(chat_id):
+    """
+    Get the modules list
+    :param chat_id: (int / String)
+    :return: formatted modules list (String)
+    """
     modules = get_semester(chat_id).modules
 
     result = "List of Modules\r\n"
