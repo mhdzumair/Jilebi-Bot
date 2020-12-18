@@ -57,6 +57,7 @@ class GeneralTest(TestCase):
             "Software Testing & Quality Controlling",
             "failed to get module name",
         )
+        self.assertEqual(get_module_name("Test"), "Test")
 
     def test_create_image_events(self):
         def testing(event_s):
