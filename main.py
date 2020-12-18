@@ -26,6 +26,10 @@ from telebot.types import Update
 from jilebi import jilebi, send_notification, TeleUsers
 
 server = Flask(__name__)
+scheduler = BackgroundScheduler()
+scheduler.add_job(
+    send_notification, IntervalTrigger(minutes=30, timezone="Asia/Colombo")
+)
 
 
 @server.route("/" + environ.get("JILEBI_TOKEN"), methods=["POST"])
@@ -49,10 +53,6 @@ def get_user_count():
 
 
 def main():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(
-        send_notification, IntervalTrigger(minutes=30, timezone="Asia/Colombo")
-    )
     send_notification()
     scheduler.start()
     try:

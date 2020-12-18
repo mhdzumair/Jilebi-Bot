@@ -15,7 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
+from os import environ
 from unittest import TestCase
 
 from PIL.Image import Image
@@ -24,6 +24,7 @@ from icalevents.icalparser import Event
 from telebot.types import Message, Chat
 
 from jilebi import control, TeleUsers, get_module_name, get_events, create_image, jilebi
+from main import server
 
 
 class GeneralTest(TestCase):
@@ -79,9 +80,17 @@ class GeneralTest(TestCase):
 
 
 class TestJilebi(TestCase):
-    message = Message(
-        None, None, [None], Chat(606319743, None, username="Mohamed_Zumair"), [], [], {}
-    )
+    @classmethod
+    def setUpClass(cls):
+        cls.message = Message(
+            None,
+            None,
+            [None],
+            Chat(606319743, None, username="Mohamed_Zumair"),
+            [],
+            [],
+            {},
+        )
 
     def test_send_welcome(self):
         self.assertIsNone(control.send_welcome(self.message))
@@ -190,6 +199,7 @@ class TestJilebi(TestCase):
             control.send_user_today_event(self.message),
             "cannot send today event as image based",
         )
+        print(control.send_image(None, self.message.chat.id))
 
     def test_submit_module_detail(self):
         self.assertIsNone(control.submit_module_details(self.message))
@@ -232,3 +242,20 @@ In19-S04-IS2402 : Industrial Statistics and Modelling Computation
 
     def test_send_notification(self):
         self.assertIsNone(control.send_notification(), "Error in send notification")
+
+
+class TestServer(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.client = server.test_client()
+
+    def test_user_count(self):
+        self.assertIsInstance(self.client.get("/get_user_count").json["count"], int)
+
+    def test_get_message(self):
+        self.assertEqual(
+            self.client.get("/" + environ.get("JILEBI_TOKEN")).status_code, 405
+        )
+
+    def test_root(self):
+        self.assertEqual(self.client.get("/").status_code, 200)
