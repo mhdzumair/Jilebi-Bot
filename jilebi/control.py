@@ -57,9 +57,9 @@ def send_image(result, chat_id):
         if len(result) % 2 == 1:
             jilebi.send_photo(chat_id, create_image(result[-1]))
     else:
-        jilebi.send_message(
+        jilebi.send_photo(
             chat_id,
-            "Congratulation! You dont have any work to do. \nEnjoy your self. Cheers!",
+            "AgACAgUAAxkDAAIUrV_ccUcdLycWJ9D5MZJn-HRWwGkpAAJuqzEb45XoVkhn3w2XOrqgc0DKbHQAAwEAAwIAA3gAA1hWBQABHgQ",
         )
 
 
