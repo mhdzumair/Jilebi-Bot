@@ -139,7 +139,7 @@ def get_events(chat_id, period, is_user, start=None, end=None):
         http = Http()
     try:
         response = events(url, http=http, start=start, end=end)
-    except (HttpLib2Error, ValueError, TimeoutError):
+    except (HttpLib2Error, ValueError, TimeoutError, ConnectionRefusedError):
         pass
     finally:
         http.close()
