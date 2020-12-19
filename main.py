@@ -53,7 +53,6 @@ def get_user_count():
 
 
 def main():
-    send_notification()
     scheduler.start()
     try:
         server.run(host="0.0.0.0", port=environ.get("PORT", 5000))
