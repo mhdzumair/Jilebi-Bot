@@ -228,7 +228,7 @@ def check_link(message):
     calendar = TeleUsers.objects.only("calendar").get(pk=message.chat.id).calendar
     if calendar:
         url = (
-            f"http://{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken="
+            f"{calendar.domain}/calendar/export_execute.php?userid={calendar.userid}&authtoken="
             f"{calendar.token}&preset_what=all&preset_time=monthnow"
         )
         jilebi.send_message(message.chat.id, "Your URL: \n" + url)
@@ -269,7 +269,7 @@ def link_parser(message):
     try:
         queries = url.split("?")[1]
         calendar = Calendar()
-        calendar.domain = url.split("/")[2]
+        calendar.domain = url.split("/")[0] + "//" + url.split("/")[2]
         calendar.userid = queries.split("&")[0].split("=")[1]
         calendar.token = queries.split("&")[1].split("=")[1]
         TeleUsers.objects.only("calendar").get(pk=message.chat.id).update(
@@ -280,7 +280,7 @@ def link_parser(message):
     except [IndexError, TypeError]:
         jilebi.reply_to(
             message,
-            f"sorry, i can't understand you url: {url}\nplease your problem to admin",
+            f"sorry, i can't understand you url: {url}\nplease Send your problem to admin",
         )
 
 
