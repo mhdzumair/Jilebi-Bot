@@ -134,7 +134,7 @@ def get_events(chat_id, period, is_user, start=None, end=None):
     )
     response = None
     try:
-        http = Http(".cache", 15)
+        http = Http(".cache")
     except PermissionError:
         http = Http()
     try:
