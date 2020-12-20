@@ -500,6 +500,12 @@ def get_answer(message):
         TeleUsers.objects(pk=message.chat.id).update(submit_position=3)
 
 
+@jilebi.message_handler(func=lambda message: message.text == "Users Count")
+def get_users_count(message):
+    text = f"Number of current \nactive users: {TeleUsers.objects.count()}😍"
+    jilebi.send_message(message.chat.id, text)
+
+
 @jilebi.message_handler(content_types=["sticker"])
 def handle_sticker(message):
     jilebi.send_sticker(message.chat.id, message.sticker.file_id)

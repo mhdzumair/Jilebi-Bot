@@ -170,7 +170,7 @@ class Keyboard:
     def send_extras(self, message):
         reply_markup = ReplyKeyboardMarkup()
         reply_markup.row("Submit your module details", "Send Queries/Feedbacks")
-        reply_markup.row("🎁 Share Jilebi", "👨🏻‍💻 Source Code")
+        reply_markup.row("🎁 Share Jilebi", "👨🏻‍💻 Source Code", "Users Count")
         reply_markup.row(self.main_menu)
         self.jilebi.send_message(
             message.chat.id, "Select Item: ", reply_markup=reply_markup
