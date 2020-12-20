@@ -80,17 +80,26 @@ def send_notification():
                     TeleUsers.objects(pk=subscriber).delete()
 
 
-def handle_all_results(result, chat_id):
+def handle_all_results(result, message):
     if isinstance(result, list):
-        if TeleUsers.objects.only("is_image_result").get(pk=chat_id).is_image_result:
-            send_image(result, chat_id)
+        if TeleUsers.objects.only("is_image_result").get(pk=message.chat.id).is_image_result:
+            send_image(result, message.chat.id)
         else:
-            send_message(result, chat_id)
+            send_message(result, message.chat.id)
     else:
         jilebi.reply_to(
-            chat_id,
+            message,
             "We are extremely sorry!\nAt the moment we cannot get your calendar.\nplease try again...",
         )
+
+
+def validate_calendar(message):
+    if not is_calendar_present(message):
+        jilebi.send_message(
+            message.chat.id, "Sorry you need to setup calendar link first"
+        )
+        return False
+    return True
 
 
 @jilebi.message_handler(commands=["start", "reset", "restart"])
@@ -150,47 +159,31 @@ def cancel_process(message):
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Today Events")
 def send_user_today_event(message):
-    if not is_calendar_present(message):
-        jilebi.send_message(
-            message.chat.id, "Sorry you need to setup calendar link first"
-        )
-        return
+    if validate_calendar(message):
+        handle_all_results(find_today_events(message.chat.id, True), message)
 
-    result = find_today_events(message.chat.id, True)
-    handle_all_results(result, message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Tomorrow events")
 def send_user_tomorrow_event(message):
-    if not is_calendar_present(message):
-        jilebi.send_message(
-            message.chat.id, "Sorry you need to setup calendar link first"
-        )
-        return
+    if validate_calendar(message):
+        handle_all_results(find_tomorrow_events(message.chat.id, True), message)
 
     handle_all_results(find_tomorrow_events(message.chat.id, True), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this week events")
 def send_user_week_event(message):
-    if not is_calendar_present(message):
-        jilebi.send_message(
-            message.chat.id, "Sorry you need to setup calendar link first"
-        )
-        return
+    if validate_calendar(message):
+        handle_all_results(find_week_events(message.chat.id, True), message)
 
     handle_all_results(find_week_events(message.chat.id, True), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this month events")
 def send_user_month_event(message):
-    if not is_calendar_present(message):
-        jilebi.send_message(
-            message.chat.id, "Sorry you need to setup calendar link first"
-        )
-        return
-
-    handle_all_results(find_month_events(message.chat.id, True), message.chat.id)
+    if validate_calendar(message):
+        handle_all_results(find_month_events(message.chat.id, True), message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Settings")
@@ -240,12 +233,7 @@ def check_link(message):
     func=lambda message: message.text == "Subscribe auto Notification"
 )
 def set_subscribe(message):
-    if not is_calendar_present(message):
-        jilebi.send_message(
-            message.chat.id, "Sorry you need to setup calendar link first"
-        )
-        return
-
+    if validate_calendar(message):
     TeleUsers.objects(pk=message.chat.id).update(is_subscriber=True)
     jilebi.reply_to(
         message, "successfully subscribe to get notification before 30 of an event"
@@ -293,22 +281,22 @@ def send_university(message):
 
 @jilebi.message_handler(func=lambda message: message.text == "Today Events")
 def send_today_event(message):
-    handle_all_results(find_today_events(message.chat.id, False), message.chat.id)
+    handle_all_results(find_today_events(message.chat.id, False), message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Tomorrow events")
 def send_tomorrow_event(message):
-    handle_all_results(find_tomorrow_events(message.chat.id, False), message.chat.id)
+    handle_all_results(find_tomorrow_events(message.chat.id, False), message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "This week events")
 def send_week_event(message):
-    handle_all_results(find_week_events(message.chat.id, False), message.chat.id)
+    handle_all_results(find_week_events(message.chat.id, False), message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "This month events")
 def send_month_event(message):
-    handle_all_results(find_month_events(message.chat.id, False), message.chat.id)
+    handle_all_results(find_month_events(message.chat.id, False), message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Modules list")
