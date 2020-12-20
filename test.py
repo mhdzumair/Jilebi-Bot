@@ -21,7 +21,7 @@ from unittest import TestCase
 from PIL.Image import Image
 from arrow import get
 from icalevents.icalparser import Event
-from telebot.types import Message, Chat
+from telebot.types import Message, Chat, User
 
 from jilebi import control, TeleUsers, get_module_name, get_events, create_image, jilebi
 from main import server
@@ -243,6 +243,15 @@ In19-S04-IS2402 : Industrial Statistics and Modelling Computation
 
     def test_send_notification(self):
         self.assertIsNone(control.send_notification(), "Error in send notification")
+
+    def test_send_admin_message(self):
+        self.message.text = """/send 606319743
+Hello, this is test message.
+"""
+        self.assertIsNone(control.send_admin_message(self.message), "Error in send admin without reply_to_message")
+        self.message.reply_to_message = self.message
+        self.message.reply_to_message.forward_from = User(606319743, False, "mohamed")
+        self.assertIsNone(control.send_admin_message(self.message), "Error in send admin with reply_to_message")
 
 
 class TestServer(TestCase):
