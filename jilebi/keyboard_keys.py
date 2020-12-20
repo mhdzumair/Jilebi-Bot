@@ -33,36 +33,38 @@ class Keyboard:
         """
 
         self.jilebi = bot
-        self.back_btn = KeyboardButton("Back")
-        self.main_menu = KeyboardButton("Main Menu")
+        self.back_btn = KeyboardButton("🔙 Back")
+        self.main_menu = KeyboardButton("🔝 Main Menu")
 
     def send_home(self, message):
         reply_markup = ReplyKeyboardMarkup(True, False)
         reply_markup.row("Get Today Events", "Get Tomorrow events")
         reply_markup.row("Get this week events", "Get next week events")
         reply_markup.row("Get this month events", "Other's Events")
+        reply_markup.row("Extra's", "⚙️ Settings")
         self.jilebi.send_message(
             message.chat.id, "Select Menu Item", reply_markup=reply_markup
         )
         TeleUsers.objects(pk=message.chat.id).update(unset__selection=1, position=0)
 
     def send_settings(self, message):
-        reply_markup = ReplyKeyboardMarkup()
+        reply_markup = ReplyKeyboardMarkup(row_width=2)
         user = TeleUsers.objects.only(
             "is_image_result", "calendar", "is_subscriber"
         ).get(pk=message.chat.id)
-        reply_markup.row("Setup moodle calender link")
+        buttons = ["🔗 Setup moodle calender link"]
         if user.calendar:
-            reply_markup.add("Check my moodle calendar link")
+            buttons.append("🔗 Check my moodle calendar link")
         if user.is_subscriber:
-            reply_markup.row("Unsubscribe Notification")
+            buttons.append("🔕 Unsubscribe Notification")
         else:
-            reply_markup.row("Subscribe auto Notification")
+            buttons.append("🔔 Subscribe auto Notification")
         if user.is_image_result:
-            reply_markup.row("Get Text based result")
+            buttons.append("📝 Get Text based result")
         else:
-            reply_markup.row("Get Image based result")
-        reply_markup.add(self.main_menu)
+            buttons.append("🖼 Get Image based result")
+        reply_markup.add(*[KeyboardButton(button) for button in buttons])
+        reply_markup.row(self.main_menu)
         self.jilebi.send_message(
             message.chat.id, "Select Setting item", reply_markup=reply_markup
         )
@@ -167,9 +169,9 @@ class Keyboard:
 
     def send_extras(self, message):
         reply_markup = ReplyKeyboardMarkup()
-        reply_markup.row("Submit your module details")
-        reply_markup.row("Send Queries/Feedbacks", "Source Code")
-        reply_markup.row("Share Jilebi", self.main_menu)
+        reply_markup.row("Submit your module details", "Send Queries/Feedbacks")
+        reply_markup.row("🎁 Share Jilebi", "👨🏻‍💻 Source Code")
+        reply_markup.row(self.main_menu)
         self.jilebi.send_message(
             message.chat.id, "Select Item: ", reply_markup=reply_markup
         )

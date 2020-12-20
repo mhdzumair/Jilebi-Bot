@@ -191,13 +191,13 @@ def send_user_month_event(message):
         handle_all_results(find_month_events(message.chat.id, True), message)
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Settings")
+@jilebi.message_handler(func=lambda message: message.text == "⚙️ Settings")
 def send_setting(message):
     keyboard.send_settings(message)
 
 
 @jilebi.message_handler(
-    func=lambda message: message.text == "Setup moodle calender link"
+    func=lambda message: message.text == "🔗 Setup moodle calender link"
 )
 def setup_link(message):
     send_tutorial(message)
@@ -220,7 +220,7 @@ def get_feedback(message):
 
 
 @jilebi.message_handler(
-    func=lambda message: message.text == "Check my moodle calendar link"
+    func=lambda message: message.text == "🔗 Check my moodle calendar link"
 )
 def check_link(message):
     calendar = TeleUsers.objects.only("calendar").get(pk=message.chat.id).calendar
@@ -235,18 +235,18 @@ def check_link(message):
 
 
 @jilebi.message_handler(
-    func=lambda message: message.text == "Subscribe auto Notification"
+    func=lambda message: message.text == "🔔 Subscribe auto Notification"
 )
 def set_subscribe(message):
     if validate_calendar(message):
-    TeleUsers.objects(pk=message.chat.id).update(is_subscriber=True)
-    jilebi.reply_to(
-        message, "successfully subscribe to get notification before 30 of an event"
-    )
-    send_setting(message)
+        TeleUsers.objects(pk=message.chat.id).update(is_subscriber=True)
+        jilebi.reply_to(
+            message, "successfully subscribe to get notification before 30 of an event"
+        )
+        send_setting(message)
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Unsubscribe Notification")
+@jilebi.message_handler(func=lambda message: message.text == "🔕 Unsubscribe Notification")
 def set_unsubscribe(message):
     TeleUsers.objects(pk=message.chat.id).update(is_subscriber=False)
     jilebi.reply_to(message, "successfully unsubscribe the notification")
@@ -278,7 +278,7 @@ def link_parser(message):
 
 
 @jilebi.message_handler(
-    func=lambda message: message.text == "See Other University Students Events"
+    func=lambda message: message.text == "Other's Events"
 )
 def send_university(message):
     keyboard.send_university(message)
@@ -314,26 +314,26 @@ def send_module_list(message):
     jilebi.send_message(message.chat.id, get_modules(message.chat.id))
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Get Text based result")
+@jilebi.message_handler(func=lambda message: message.text == "📝 Get Text based result")
 def set_text_based(message):
     TeleUsers.objects(pk=message.chat.id).update(is_image_result=False)
     jilebi.reply_to(message, "Successfully setup for Text based result.")
     send_setting(message)
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Get Image based result")
+@jilebi.message_handler(func=lambda message: message.text == "🖼 Get Image based result")
 def set_image_based(message):
     TeleUsers.objects(pk=message.chat.id).update(is_image_result=True)
     jilebi.reply_to(message, "Successfully setup for Image based result.")
     send_setting(message)
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Main Menu")
+@jilebi.message_handler(func=lambda message: message.text == "🔝 Main Menu")
 def send_to_main(message):
     keyboard.send_home(message)
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Back")
+@jilebi.message_handler(func=lambda message: message.text == "🔙 Back")
 def send_back(message):
     user = TeleUsers.objects.only("position", "selection__division").get(
         pk=message.chat.id
@@ -365,7 +365,7 @@ def send_back(message):
         keyboard.send_home(message)
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Extra")
+@jilebi.message_handler(func=lambda message: message.text == "Extra's")
 def send_extra_menu(message):
     keyboard.send_extras(message)
 
@@ -382,7 +382,7 @@ def submit_module_details(message):
     TeleUsers.objects(pk=message.chat.id).update(submit=True, submit_position=0)
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Share Jilebi")
+@jilebi.message_handler(func=lambda message: message.text == "🎁 Share Jilebi")
 def share_jilebi(message):
     jilebi.send_message(
         message.chat.id,
@@ -390,7 +390,7 @@ def share_jilebi(message):
     )
 
 
-@jilebi.message_handler(func=lambda message: message.text == "Source Code")
+@jilebi.message_handler(func=lambda message: message.text == "👨🏻‍💻 Source Code")
 def send_source_code(message):
     jilebi.send_message(
         message.chat.id,
