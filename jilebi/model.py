@@ -197,7 +197,7 @@ def place_text(image, place, event, size, fonts, rotate):
     else:
         period = f"{start.format('hh:mm A')}    to    {end.format('hh:mm A')}"
     summary = fill(
-        shorten(event.summary.replace("&amp;", "&"), 100, placeholder="..."), 30
+        shorten(event.summary.replace("&amp;", "&"), 100, placeholder="..."), 25
     )
     try:
         title = fill(
