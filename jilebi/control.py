@@ -583,6 +583,8 @@ You can also enter /cancel to cancel this process.
         keyboard.send_extras(message)
         jilebi.forward_message("606319743", message.chat.id, message.message_id)
         text = f"""
+chat_id: {message.chat.id}
+
 university: {user.user_submit.university}
 faculty: {user.user_submit.faculty}
 division: {user.user_submit.division}
