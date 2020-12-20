@@ -69,16 +69,20 @@ def send_message(response, chat_id):
         jilebi.send_message(chat_id, text)
 
 
+def send_message_to(chat_id, text):
+    try:
+        jilebi.send_message(chat_id, text)
+    except apihelper.ApiTelegramException as e:
+        if e.error_code == 403:
+            TeleUsers.objects(pk=chat_id).delete()
+
+
 def send_notification():
     subscribers = TeleUsers.objects(is_subscriber=True).distinct("pk")
     for subscriber in subscribers:
         notification = find_half_hour_events(subscriber)
         if notification:
-            try:
-                jilebi.send_message(subscriber, notification)
-            except apihelper.ApiTelegramException as e:
-                if e.error_code == 403:
-                    TeleUsers.objects(pk=subscriber).delete()
+            send_message_to(subscriber, notification)
 
 
 def handle_all_results(result, message):
@@ -156,6 +160,30 @@ def cancel_process(message):
         unset__user_submit=1, unset__submit_position=1, submit=False, feedback=False
     )
     keyboard.send_home(message)
+
+
+@jilebi.message_handler(commands=["send"], func=lambda message: message.chat.id == 606319743)
+def send_admin_message(message):
+    text = """
+This message is From Admin @Mohamed_Zumair
+
+"""
+    message.text = message.text[5:]
+    if message.reply_to_message:
+        text += message.text
+        jilebi.send_message(message.reply_to_message.forward_from.id, text)
+    else:
+        chat_id = message.text.splitlines()[0].strip()
+        text += "\n".join(message.text.splitlines()[1:])
+        jilebi.send_message(chat_id, text)
+
+
+@jilebi.message_handler(commands=["broadcast"], func=lambda message: message.chat.id == 606319743)
+def send_broadcast(message):
+    text = "\n".join(message.text.splitlines()[1:])
+    users = TeleUsers.objects()
+    for user in users:
+        send_message_to(user.id, text)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get Today Events")
