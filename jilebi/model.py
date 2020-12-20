@@ -134,9 +134,9 @@ def get_events(chat_id, period, is_user, start=None, end=None):
     )
     response = None
     try:
-        http = Http(".cache")
+        http = Http(".cache", timeout=20)
     except PermissionError:
-        http = Http()
+        http = Http(timeout=20)
     try:
         response = events(url, http=http, start=start, end=end)
     except (HttpLib2Error, ValueError, TimeoutError, ConnectionRefusedError):
