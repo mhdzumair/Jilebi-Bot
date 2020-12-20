@@ -192,13 +192,10 @@ def send_user_today_event(message):
         handle_all_results(find_today_events(message.chat.id, True), message)
 
 
-
 @jilebi.message_handler(func=lambda message: message.text == "Get Tomorrow events")
 def send_user_tomorrow_event(message):
     if validate_calendar(message):
         handle_all_results(find_tomorrow_events(message.chat.id, True), message)
-
-    handle_all_results(find_tomorrow_events(message.chat.id, True), message.chat.id)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this week events")
@@ -566,12 +563,11 @@ In19-S04-IT2408 : Software Testing & Quality Controlling,
 In19-S04-IS2401 : Communication Skills and Technical Writing,
 In19-S04-IS2402 : Industrial Statistics and Modelling Computation
 
-module code format:
-
-In(Your university entered year)-(Your Semester number)-(Module code)
+if you dont know your module code. please contact admin @Mohamed_Zumair.
+You can also enter /cancel to cancel this process.
 """
         jilebi.send_message(message.chat.id, text)
-        user.update(user_submit__semester=message.text, submit_position=6)
+        user.update(user_submit__semester=message.text, submit_position=4)
     else:
         jilebi.send_message(
             message.chat.id,
