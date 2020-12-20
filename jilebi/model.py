@@ -399,6 +399,20 @@ def find_month_events(chat_id, is_user):
     )
 
 
+def find_next_week_events(chat_id, is_user):
+    """
+    Find user's & other's Next Week events
+    :param chat_id: telegram user id (int / string)
+    :param is_user: (Boolean)
+    :return: Next week events
+    """
+    week_start = now("Asia/Colombo").floor("week").shift(weeks=1)
+    week_end = week_start.ceil("week")
+    return get_events(
+        chat_id, "weeknext", is_user, week_start.datetime, week_end.datetime
+    )
+
+
 def get_modules(chat_id):
     """
     Get the modules list

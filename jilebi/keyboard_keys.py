@@ -39,9 +39,8 @@ class Keyboard:
     def send_home(self, message):
         reply_markup = ReplyKeyboardMarkup(True, False)
         reply_markup.row("Get Today Events", "Get Tomorrow events")
-        reply_markup.row("Get this week events", "Get this month events")
-        reply_markup.row("See Other University Students Events")
-        reply_markup.row("Extra", "Settings")
+        reply_markup.row("Get this week events", "Get next week events")
+        reply_markup.row("Get this month events", "Other's Events")
         self.jilebi.send_message(
             message.chat.id, "Select Menu Item", reply_markup=reply_markup
         )
@@ -143,9 +142,10 @@ class Keyboard:
     def send_others_menu(self, message):
         semester = get_semester(message.chat.id)
         reply_markup = ReplyKeyboardMarkup()
+        buttons = []
         if semester.donor_calendar:
-            reply_markup.row("Today Events", "Tomorrow events")
-            reply_markup.row("This week events", "This month events")
+            buttons.extend(["Today Events", "Tomorrow events", "This week events", "Next week events",
+                            "This month events"])
             self.jilebi.send_message(
                 message.chat.id,
                 f"Link Donate by: {semester.donor_name}",
@@ -157,7 +157,8 @@ class Keyboard:
                 "If you're a student of this course, please contact me to "
                 "donate your link.",
             )
-        reply_markup.row("Modules list")
+        buttons.append("Modules list")
+        reply_markup.add(*[KeyboardButton(button) for button in buttons])
         reply_markup.row(self.back_btn, self.main_menu)
         self.jilebi.send_message(
             message.chat.id, "Select Item: ", reply_markup=reply_markup

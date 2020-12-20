@@ -35,6 +35,7 @@ from .model import (
     find_week_events,
     find_month_events,
     get_modules,
+    find_next_week_events
 )
 
 
@@ -177,7 +178,11 @@ def send_user_week_event(message):
     if validate_calendar(message):
         handle_all_results(find_week_events(message.chat.id, True), message)
 
-    handle_all_results(find_week_events(message.chat.id, True), message.chat.id)
+
+@jilebi.message_handler(func=lambda message: message.text == "Get next week events")
+def send_user_next_week_event(message):
+    if validate_calendar(message):
+        handle_all_results(find_next_week_events(message.chat.id, True), message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "Get this month events")
@@ -292,6 +297,11 @@ def send_tomorrow_event(message):
 @jilebi.message_handler(func=lambda message: message.text == "This week events")
 def send_week_event(message):
     handle_all_results(find_week_events(message.chat.id, False), message)
+
+
+@jilebi.message_handler(func=lambda message: message.text == "Next week events")
+def send_week_event(message):
+    handle_all_results(find_next_week_events(message.chat.id, False), message)
 
 
 @jilebi.message_handler(func=lambda message: message.text == "This month events")
